@@ -28,7 +28,7 @@ describe('Kekspress', () => {
   });
 
   describe('nextStop', () => {
-    test(`when calling it without param, it only makes 1 passenger quit`, () => {
+    test(`when calling it without param, it only makes 1 passenger quit, as train starts from 0`, () => {
       const kekspress = defaultKekspress();
       kekspress.nextStop();
       expect(kekspress.getPassengers()).toEqual(['2', '3']);

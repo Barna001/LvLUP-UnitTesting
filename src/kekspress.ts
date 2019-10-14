@@ -17,27 +17,21 @@ export class Kekspress {
 
   nextStop(skipping = 0) {
     this.currentStop += skipping + 1;
-    this.passengers = this.passengers.reduce((newPassangers: KekspressPassenger[], passenger) => {
-      if (passenger.getOffAt > this.currentStop) {
-        newPassangers.push(passenger);
-      }
-      return newPassangers;
-    }, []);
+    this.passengers.filter(({ getOffAt }) => getOffAt <= this.currentStop).forEach(({ name }) => this.getOff(name));
   }
 
-  board(name: string, getOffAt: number) {
-    if (this.passengers.find(seat => seat.name === name)) {
-      throw new Keksception(`Name ${name} already boarded`);
+  board(newName: string, getOffAt: number) {
+    if (this.passengers.find(({ name }) => name === newName)) {
+      throw new Keksception(`Name ${newName} already boarded`);
     }
     if (this.passengers.length < this.maxSeats) {
-      this.passengers.push({ name, getOffAt });
+      this.passengers.push({ name: newName, getOffAt });
     }
   }
 
   getOff(name: string): KekspressPassenger | undefined {
-    const getOffIndex = this.passengers.findIndex(passenger => passenger.name === name);
-    if (getOffIndex != -1) {
-      return this.passengers.splice(getOffIndex, 1)[0];
-    }
+    const quiter = this.passengers.find(p => p.name === name);
+    this.passengers = this.passengers.filter(p => p.name !== name);
+    return quiter;
   }
 }

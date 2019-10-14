@@ -82,10 +82,18 @@ describe('Kekspress', () => {
       expect(kekspress.getPassengers()).toEqual(['1', '2', '3']);
     });
 
-    test(`Removes passenger 1`, () => {
+    test(`Returns undefined if no passengers`, () => {
+      const kekspress = new Kekspress(9);
+      const quiter = kekspress.getOff('1');
+      expect(kekspress.getPassengers()).toEqual([]);
+      expect(quiter).toEqual(undefined);
+    });
+
+    test(`Removes passenger 1 and return it`, () => {
       const kekspress = defaultKekspress();
-      kekspress.getOff('1');
+      const quiter = kekspress.getOff('1');
       expect(kekspress.getPassengers()).toEqual(['2', '3']);
+      expect(quiter).toEqual({ name: '1', getOffAt: 1 });
     });
   });
 });

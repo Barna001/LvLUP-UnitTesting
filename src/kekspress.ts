@@ -1,4 +1,4 @@
-interface KekspressPassegnger {
+interface KekspressPassenger {
   name: string;
   getOffAt: number;
 }
@@ -6,8 +6,9 @@ interface KekspressPassegnger {
 class Keksception extends Error {}
 
 export class Kekspress {
-  private passengers: KekspressPassegnger[] = [];
+  private passengers: KekspressPassenger[] = [];
   private currentStop: number = 0;
+
   constructor(public maxSeats: number) {}
 
   getPassengers(): string[] {
@@ -16,8 +17,8 @@ export class Kekspress {
 
   nextStop(skipping = 0) {
     this.currentStop += skipping + 1;
-    this.passengers = this.passengers.reduce((newPassangers: KekspressPassegnger[], passenger) => {
-      if (passenger.getOffAt !== this.currentStop) {
+    this.passengers = this.passengers.reduce((newPassangers: KekspressPassenger[], passenger) => {
+      if (passenger.getOffAt > this.currentStop) {
         newPassangers.push(passenger);
       }
       return newPassangers;
@@ -33,7 +34,7 @@ export class Kekspress {
     }
   }
 
-  getOff(name: string): KekspressPassegnger | undefined {
+  getOff(name: string): KekspressPassenger | undefined {
     const getOffIndex = this.passengers.findIndex(passenger => passenger.name === name);
     if (getOffIndex != -1) {
       return this.passengers.splice(getOffIndex, 1)[0];

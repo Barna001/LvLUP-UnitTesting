@@ -34,14 +34,58 @@ describe('Kekspress', () => {
       expect(kekspress.getPassengers()).toEqual(['2', '3']);
     });
 
-    test(`when calling it with param 1, it makes 2 passengers quit`, () => {
+    test(`when calling it with param 1, it skips 1 stop so 2 passengers quit(1 and 2)`, () => {
       const kekspress = defaultKekspress();
       kekspress.nextStop(1);
       expect(kekspress.getPassengers()).toEqual(['3']);
     });
   });
 
-  describe('board', () => {});
+  describe('board', () => {
+    test(`Add passenger to empty train`, () => {
+      const kekspress = new Kekspress(9);
+      kekspress.board('1', 1);
+      expect(kekspress.getPassengers()).toEqual(['1']);
+    });
 
-  describe('getOff', () => {});
+    test(`Add passengers to empty train in call order`, () => {
+      const kekspress = new Kekspress(9);
+      kekspress.board('1', 1);
+      kekspress.board('2', 1);
+      expect(kekspress.getPassengers()).toEqual(['1', '2']);
+    });
+
+    test(`Add passengers to train which already has passenger with name throws error`, () => {
+      const kekspress = new Kekspress(9);
+      kekspress.board('1', 1);
+      try {
+        kekspress.board('1', 1);
+        fail();
+      } catch (e) {
+        expect(e.message).toEqual(`Name 1 already boarded`);
+      }
+    });
+
+    test(`Cannot add passenger if train is full`, () => {
+      const kekspress = new Kekspress(2);
+      kekspress.board('1', 1);
+      kekspress.board('2', 2);
+      kekspress.board('3', 3);
+      expect(kekspress.getPassengers()).toEqual(['1', '2']);
+    });
+  });
+
+  describe('getOff', () => {
+    test(`If wrong name given returns original list`, () => {
+      const kekspress = defaultKekspress();
+      kekspress.getOff('not existing name');
+      expect(kekspress.getPassengers()).toEqual(['1', '2', '3']);
+    });
+
+    test(`Removes passenger 1`, () => {
+      const kekspress = defaultKekspress();
+      kekspress.getOff('1');
+      expect(kekspress.getPassengers()).toEqual(['2', '3']);
+    });
+  });
 });
